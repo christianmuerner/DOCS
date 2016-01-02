@@ -1,0 +1,4 @@
+/* Docks Size
+   ========================================================================== */
+
+defaults write com.apple.dock tilesize -integer 8;killall Dock

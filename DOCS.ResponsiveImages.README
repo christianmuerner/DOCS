@@ -1,0 +1,314 @@
+/* RESPONSIVE IMAGES Drupal 8
+   ========================================================================== */
+
+/* Deep Dive
+  ========================================================================== */
+
+target / context = result
+width %
+
+Raster images
+measured in px, not in %
+scaling up is blurry caused by the interpolation
+
+/* RULE OF 25% IMAGE SIZE CALCULATION PROXY by Marc Drummond
+  ========================================================================== */
+
+width x 1.25
+height x 1.25
+pixels x 1.5625
+
+56.25% more pixels
+
+HEADERIMAGE
+
+Breakpoints         Width        Min px    Max px
+default             100%         320       1599
+(min-width: 100em)  100em        1600      1600
+
+Min size: 320px
+Max size: 1600px
+
+HEADERIMAGE RULE OF 25%
+
+320               320
+400               400 a       25%
+500               500 c       25%
+625               625 d       25%
+781.25            800 a b     28%
+976.5625          1000 c      25%
+1,220.703125      1250 d      25%
+1,525.8789063     1600 b      28%
+1,907.3486329
+
+HEADERIMAGE 2x SCREEN DENSITIES
+
+320               640               640         320           a 640
+400               800               800         400           b 800
+500               1000              1000        500           c 1000
+625               1250              1250      a 640 (320x2)   d 1280
+781.25            1562.5            1600      b 800           e 1600
+976.5625          1953.125          2000      c 1000            2000
+1,220.703125      2441.40625        2500      d 1280 (640x2)    2560
+1,525.8789063     3,051.7578125     3200      e 1600            3200
+1,907.3486329     3814.6972656
+
+11 SOURCE WIDTHS VS. 18 SOURCE WIDTHS
+HEADERIMAGE FINAL SOURCE WIDTHS
+
+320
+400   25%
+500   25%
+640   28%
+800   25%
+1000  25%
+1280  28%
+1600  25%
+2000  25%
+2560  25.6%
+3200  25%
+
+ASIDEIMAGE
+
+Breakpoints         Width         Min px    Max px
+default             90%           288       540
+(min-width: 37.5em) 36%           216       432
+(min-width: 75em)   40% - 48px    432       592
+(min-width: 100em)  640px - 48px  592       592
+
+Min size: 288px
+Max size: 592px
+
+ASIDEIMAGE RULE OF 25%
+
+288
+360
+450
+562.5
+703.125
+
+BECAUSE COME NEAREST TO TARGET DIMENSION
+ASIDEIMAGE -25% FROM TOP
+
+303.104     300
+378.88      375   25%
+473.6       470   27%
+592       a 600   27.7%
+
+ASIDEIMAGE 2x SCREEN DENSITIES
+303.104   606.208   300   a 600
+378.88    757.76    375     750
+473.6     947.2     470     940
+592       1184      600     1200
+
+7 SOURCE WIDTHS VS 8 SOURCE WIDTHS
+ASIDEIMAGE FINAL SOURCE WIDTHS
+
+300
+375   25%
+470   27%
+600   27.7%
+750   25%
+940   25.33%
+1200  27.7%
+
+
+/* CSS
+   ========================================================================== */
+
+<style>
+  /* IMAGE RULES */
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* POST RULES */
+  .post {
+    @media (min-width: 100em){
+      left: 50%;
+      position: relative;
+      transform: translate(-50%, 0);
+      width: 100em;
+    }
+  }
+
+  /* ASIDE RULES */
+  .post-aside {
+    padding: 5%;
+    width: 100%;
+    @media (min-width: 37.5em){
+      float: left;
+      padding: 2%;
+      width: 40%;
+    }
+    @media (min-width: 75em){
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+HEADERIMAGE
+.post > .post-headerimage > img
+Breakpoints         .post   .post-headerimage   Final width
+default             100%    100%                100%
+(min-width: 100em)  100em   100%                100em
+
+.post > .post-inner > .post-aside > .post-aside-image > img
+ASIDEIMAGE
+Breakpoints         .post   .post-aside         Final width
+default             100%    100% - 5% x 2       90%
+(min-width: 37.5em) 100%    40% - 2% x 2        36%
+(min-width: 75em)   100%    40% - 1.5rem x 2    40% - 48px
+(min-width: 100em)  100em   40% - 1.5rem x 2    640px - 48px
+
+/* HTML
+   ========================================================================== */
+
+<picture>
+  <source media="(min-width: 1024px)" scrset="big.jpg 1x, big-hd.jpg 2x">
+  <source media="(min-width: 768px)" scrset="middle.jpg 1x, middle-hd.jpg 2x">
+  <source scrset="small.jpg 1x, small-hd.jpg 2x">
+  <img src="fallback.jpg" alt="">
+</picture>
+
+*.WEBP is also supported and can fallback to *.jpg
+
+<img scr="small.jpg"
+     srcset="large.jpg 1024w",
+             medium.jpg 640w,
+             small.jpg 320w"
+     sizes="(min-width: 36em) 33.3vw, 100vw"
+     alt="A rad wolf">
+
+<article class="post">
+  <figure class=post-headerimage">
+    <img src="images/headerimage.jpg" alt="VHS occupy biodiesel">
+  </figure>
+  <div class="post-inner">
+    <main class="post-body" role="main">
+      <h1 class="post-title">Schlitz locavore DIY</h1>
+      <p>Schlitz locavore DIY, kale chips 3 wolf moon meditation intelligentsia farm-to-table. Vegan selvage blog quinoa letterpress. Selvage gochujang kombucha quinoa viral, small batch actually disrupt. Salvia pabst PBR&B, flannel asymmetrical DIY hoodie semiotics chillwave sriracha iPhone. Craft beer photo booth yr salvia. You probably haven't heard of them neutra selvage kombucha irony meh fixie. Blue bottle pabst you probably haven't heard of them, portland viral lomo green juice pour-over cliche.</p>
+    </main>
+    <aside class="post-aside" role="complementary">
+      <figure class=post-aside-image">
+        <img src="images/asideimage.jpg" alt="VHS occupy biodiesel">
+        <figcaption>VHS occupy biodiesel</figcaption>
+      </figure>
+    </aside>
+  </div>
+</article>
+
+/* SIZES ATTRIBUTE
+   ========================================================================== */
+
+HEADERIMAGE
+Breakpoints         Final width   Sizes width
+default             100%          100vw
+(min-width: 100em)  100em         100em
+
+SIZES
+<img sizes="(min-width: 100em) 100em, 100vw">
+SRCSET
+<img srcset="
+  headerimage-320.jpg 320w,
+  headerimage-400.jpg 400w,
+  headerimage-500.jpg 500w,
+  headerimage-640.jpg 640w,
+  headerimage-800.jpg 800w,
+  headerimage-1000.jpg 1000w,
+  headerimage-1280.jpg 1280w,
+  headerimage-1600.jpg 1600w,
+  headerimage-2000.jpg 2000w,
+  headerimage-2560.jpg 2560w,
+  headerimage-3200.jpg 3200w">
+
+ASIDEIMAGE
+Breakpoints         Final width   Sizes width
+default             90%           90vw
+(min-width: 37.5em) 36%           36vw
+(min-width: 75em)   40% - 48px    calc( 40vw - 3em )
+(min-width: 100em)  640px - 48px  37em
+
+SIZES
+<img sizes="(min-width: 100em) 37em,
+            (min-width: 75em) calc(40vw - 3em),
+            (min-width: 37.5em) 36vw, 90vw">
+SRCSET
+<img srcset="
+  asideimage-300.jpg 300w,
+  asideimage-375.jpg 375w,
+  asideimage-470.jpg 470w,
+  asideimage-600.jpg 600w,
+  asideimage-750.jpg 750w,
+  asideimage-940.jpg 940w
+  asideimage-1200.jpg 1200w">
+
+/* Picturefill
+   ========================================================================== */
+
+Use in old browser that do not support this technic.
+https://scottjehl.github.io/picturefill/
+
+/* Drupal Core Modules
+   ========================================================================== */
+
+Enable in Drupal 8 admin backend
+/admin/modules
+both modules
+Breakpoint (Manage breakpoints and breakpoint groups for responsive designs)
+/admin/help/breakpoint
+and
+Responsive Image (Provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag)
+/admin/help/responsive_image
+/admin/config/media/responsive-image-style
+
+Add Image Styles for every image dimension
+/admin/config/media/image-styles/
+/admin/config/media/image-styles/add
+
+Try JPEG quality lower, may 60% or 50%
+/admin/config/media/image-toolkit
+
+/* Preprocessing
+   ========================================================================== */
+
+Drupal 7
+function THEME_preprocess_node(&$variables) {
+  if ($variables['type'] == 'blog') {
+    $fallback_style = 'width_400';
+    if ($account = user_load($node->uid)) {
+      if (isset($account->picture->uri)
+          && ($mapping = picutre_mapping_load('author_image'))
+          && ($breakpoints = picture_get_mapping_breakpoints($mapping, $fallback_style))) {
+          $image_options = array(
+            'uri' => $account->picture->uri,
+            'alt' => '',
+            'breakpoints' => $breakpoints,
+            'style_name' => $fallback_style,
+          );
+          $variables['user_picture'] = theme('picture', $image_options);
+      }
+    }
+  }
+}
+
+Drupal 8
+$content['side_image_responsive'] = array(
+    '#type' => 'responsive_image',
+    '#uri' => 'public://side-image.png',
+    '#attributes' => array(
+      'alt' => t('Headerimage'),
+      'title' => t('Headerimage Title'),
+    ),
+  ),
+  '#responsive_image_style_id' => 'hero',
+);
+
+/* Sources:
+   ========================================================================== */
+
+https://responsiveimages.org/
+http://2015.tcdrupal.org/session/sizing-responsive-images-make-plan-you-drupal
+https://www.youtube.com/watch?v=TxNW0YNylLI
+https://www.advomatic.com/blog/adding-responsive-images-to-your-drupal-8-site

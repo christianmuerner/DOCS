@@ -1,0 +1,274 @@
+Comparison of PHPTemplate and Twig theming paradigms
+https://www.drupal.org/node/1918824
+
+/* DUMP
+   ========================================================================== */
+
+kint(), dump(), dpm()
+{{ kint(attributes) }}
+
+<ul>
+  {% for val in _context|keys %}
+  	<li>{{ val }}</li>
+  {% else %}
+  	<li>(no items in the array)</li>
+  {% endfor %}
+</ul>
+
+<ol>
+    {% for key, value in _context  %}
+      <li>{{ key }}</li>
+    {% endfor %}
+</ol>
+
+{{ kint(content.field_subtitle['#items'].getValue()) }}
+
+{{ content.field_subtitle['#items'].getValue()|first.value }}
+{{ content.field_subtitle['#items'].getValue()|last.value }}
+
+{% for item in content.field_-NAME['#items'].getValue() %}
+  <p>{{ item.value }}</p>
+{% endfor %}
+
+{% if content.field_-NAME['#itemns'].getValue|first.value == "1" %}
+  <p>{ content.field_-NAME }</p>
+{% endif %}
+
+/* Docblock COMMENTS
+   ========================================================================== */
+
+{#
+/**
+ * @file
+ * File description
+ */
+#}
+
+/* THEME HOOK SUGGESTION
+   ========================================================================== */
+
+hook_theme_suggestions_HOOK()
+
+node--article.html.twig
+
+<?php
+/**
+* Implements hook_theme_suggestions_HOOK_alter() for node templates.
+*/
+function MYTHEME_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  $suggestions[] = 'node__' . 'first';
+  $suggestions[] = 'node__' . 'second';
+}
+To add a template file suggestion for the page hook, you would implement hook_theme_suggestions_page_alter().
+
+hook_preprocess for suggestions
+
+Each theme hook suggestion will automatically get it's own preprocess function.
+For the example above, the following two preprocess functions will be available:
+/* for $suggestions[] = 'node__' . 'first'; */
+function hook_preprocess_node__first(&$variables);
+
+/* for $suggestions[] = 'node__' . 'second'; */
+function hook_preprocess_node__second(&$variables);
+
+
+/* FUNCTION NAMES
+   ========================================================================== */
+
+node-links.html.twig
+
+/* VARIABLES
+   ========================================================================== */
+
+<div class="content">
+ {{ content }}
+</div>
+
+{% set custom_var = content.comments %}
+{{ custom_var }}
+
+{% set args = {'!author': author, '!date': created} %}
+{{ !author }}
+{{ !date }}
+
+/* VARIABLES ARRAY
+   ========================================================================== */
+
+{% set args = {'check': 'check1', 'check2': 'check2'} %}
+<h1>test {{ args.check }}</h1>
+<h2>test {{ args.check2 }}</h2>
+
+/* IMPLODE A LIST
+   ========================================================================== */
+
+{{ usernames | join(', ') }}
+{% set numbers = [{'#markup': 'One'}, {'#markup':'Two'}, {'#markup':'Three'}] %}
+{{ numbers }}
+
+{% set numbers = [{'#markup': 'One'}, {'#markup':'Two'}, {'#markup':'Three'}] %}
+{% for number in numbers %}
+  {{ number }}
+{% endfor %}
+
+/* CONDITONALS
+   ========================================================================== */
+
+{% if content.comments %}
+
+{% endif %}
+
+{% if content.comments is not empty %}
+
+{% endif %}
+
+{% if content.comments is defined %}
+
+{% endif %}
+
+{% if count > 0 %}
+
+{% endif %}
+
+/* CONTROL STRUCTURES
+   ========================================================================== */
+
+{% for user in users %}
+  {{ user }}
+{% endfor %}
+
+/* FILTERS
+   ========================================================================== */
+
+Check plain text:
+{{ title|striptags }}
+
+Translate:
+{{ 'Home'|t }}
+
+Translate with substitutions:
+{{ 'Welcome, @username'|t({ '@username': user.name }) }}
+{% set username = user.name %}
+{% trans %}
+  Welcome, {{ username }}
+{% endtrans %}
+
+/* RENDER CONTENT
+   ========================================================================== */
+
+{{ content|without('links') }}
+
+clean_class
+clean_id
+format_date
+
+{{ var1|t }}
+{{ var1|placeholder }}
+{% trans %}
+  {{ var1 }}
+{% endtrans %}
+
+http://twig.sensiolabs.org/doc/filters/index.html
+
+/* WHITESPACE CONTROL
+   ========================================================================== */
+
+<div class="body">
+  {{- block.content -}}
+</div>
+
+<div class="body">{{ block.content }}</div>
+
+/* CLASSES
+   ========================================================================== */
+
+<div{{attributes.addClass('my-class')}}></div>
+
+{%
+  set classes = [
+    'red',
+    'green',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}></div>
+outputs <div class="red green"></div>
+
+{# classes = [ 'red', 'green', 'blue' ] #}
+<div{{ attributes.addClass(classes).removeClass('green') }}></div>
+
+<div{{ attributes.setAttribute('id', 'myID') }}></div>
+outputs <div id="myID"></div>
+
+<div{{ attributes.removeAttribute('id') }}></div>
+
+{% if attributes.hasClass(‘myClass') %}
+  {# do stuff #}
+{% endif %}
+
+{% set classes = ['red', 'green', 'blue'] %}
+{% set my_id = 'specific-id' %}
+{% set image_src = 'https://www.drupal.org/files/powered-blue-135x42.png' %}
+<img{{ attributes.addClass(classes).removeClass('green').setAttribute('id', my_id).setAttribute('src', image_src) }}>
+outputs <img id="specific-id" class="red blue" src="https://www.drupal.org/files/powered-blue-135x42.png">
+
+<div class=”myclass {{ attributes.class }}”{{attributes|without(‘class’) }}></div>
+
+/* PREPROCESS
+   ========================================================================== */
+
+file theme_name.theme
+
+Create a file in your theme directory called mytheme.theme
+Create a function such as mytheme_preprocess_HOOK where HOOK refers to the item you wish to affect.
+Write your changes and save
+Rebuild the cache so your changes are available
+
+/**
+* Implements hook_preprocess_HOOK() for menu.html.twig.
+*/
+function mytheme_preprocess_menu(&$variables) {
+  $variables['attributes']['class'][] = 'my-menu';
+}
+
+/**
+* Implements hook_preprocess_HOOK() for menu.html.twig.
+*/
+function mytheme_preprocess_menu(&$variables) {
+  if($variables['menu_name'] == 'main') {
+    $variables['attributes']['class'][] = 'my-main-menu';
+  }
+}
+
+Cache API in Drupal 8
+<?php
+function fluffiness_preprocess_page(&$variables) {
+  $variables['#cache']['contexts'][] = 'route';
+  if (\Drupal::routeMatch()->getRouteName() === 'entity.node.preview') {
+    $variables['#attached']['library'][] = 'fluffiness/node-preview';
+  }
+}
+?>
+
+when
+
+<?php
+function fluffiness_preprocess_maintenance_page(&$variables) {
+  $variables['#attached']['library'][] = 'fluffiness/cuddly-slider';
+}
+?>
+
+/* MULTILINGIAL IN JAVASCRIPT
+   ========================================================================== */
+
+The Drupal core javascript library (core/drupal) ships with two functions to support multilingual in Javascript. Drupal.t() and Drupal.formatPlural() are two functions available, that work just like their PHP equivalents:
+
+Drupal.t()
+
+PHP: ?
+var close = Drupal.t('Close');
+var nodesOfType = Drupal.t('Showing nodes of @type', {@type: nodeType});
+
+Drupal.formatPlural()
+
+PHP: \Drupal\Core\StringTranslation\TranslationInterface::formatPlural()
+var nodesCount = Drupal.formatPlural(count, '1 node', '@count nodes');
+var nodesCountOfType = Drupal.formatPlural(count, '1 node of @type', '@count nodes of @type', {@type: nodeType});
