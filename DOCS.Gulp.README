@@ -1,9 +1,39 @@
 /* Drupal 8 theme with Node.js, LibSass, Gulp & BrowserSync by Andrei Zvonkov
    ========================================================================== */
 
+TERMINAL
+
 install node.js
 install gulp globally - $ npm install gulp -g
 cd into the theme directory
 run $ npm install to fetch all the dependencies
 fetches node modules - gulp, gulp-sass, etc
 add node_modules to .gitignore
+
+PACKAGE.JSON
+
+npm init
+
+basic project info
+contains all required packages
+add packages $ pm install <name> --save-dev
+
+browser-sync
+gulp
+gulp-autoprefixer
+gulp-beautify
+gulp-imagemin
+gulp-jshint
+gulp-load-plugins
+gulp-notify
+gulp-sass
+gulp-shell
+gulp-sourcemaps
+gulp-uglify
+jshint-stylish
+lodash
+
+"dependencies": {
+  "gulp": "^3.9.0",
+  "gulp-load-plugins": "^1.0.0"
+}
