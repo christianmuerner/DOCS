@@ -2,6 +2,7 @@
    ========================================================================== */
 
 TERMINAL
+/* ========================================================================== */
 
 install node.js
 install gulp globally - $ npm install gulp -g
@@ -12,6 +13,7 @@ add node_modules to .gitignore
 
 
 PACKAGE.JSON
+/* ========================================================================== */
 
 npm init
 
@@ -58,6 +60,7 @@ https://www.npmjs.com/package/lodash
 
 
 LibSass - Version 3.2.5
+/* ========================================================================== */
 
 LibSass = specifiedNo Ruby depency
 Feature parity. Catching up to Ruby Sass 3.4
@@ -71,8 +74,21 @@ http://neat.bourbon.io/
 
 
 Gulp your Drupal 8 Theme
+/* ========================================================================== */
 
 gulpfile.js
 require dependencies
 tasks for sass, js, img, twig
 gulp to compile, watch & browsersync
+
+
+Gulp Pipeline & Tasks
+/* ========================================================================== */
+
+sass compiling
+sourcemaps
+autoprefixer
+error notifications without stopping watch task
+drush to clear the theme registry
+miscellaneous cleanup, lint, beautify tasks
+browsersync css, js, twig, images
