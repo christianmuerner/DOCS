@@ -10,6 +10,7 @@ run $ npm install to fetch all the dependencies
 fetches node modules - gulp, gulp-sass, etc
 add node_modules to .gitignore
 
+
 PACKAGE.JSON
 
 npm init
@@ -38,6 +39,7 @@ lodash
   "gulp-load-plugins": "^1.0.0"
 }
 
+
 LibSass - Version 3.2.5
 
 LibSass = specifiedNo Ruby depency
@@ -49,6 +51,7 @@ http://bourbon.io/
 &
 Neat
 http://neat.bourbon.io/
+
 
 Gulp your Drupal 8 Theme
 
