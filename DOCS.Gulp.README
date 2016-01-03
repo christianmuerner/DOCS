@@ -37,3 +37,22 @@ lodash
   "gulp": "^3.9.0",
   "gulp-load-plugins": "^1.0.0"
 }
+
+LibSass - Version 3.2.5
+
+LibSass = specifiedNo Ruby depency
+Feature parity. Catching up to Ruby Sass 3.4
+Sass compatibility compares Sass versions sass-compatibility.github.io
+No Compass but you can use
+Bourbon
+http://bourbon.io/
+&
+Neat
+http://neat.bourbon.io/
+
+Gulp your Drupal 8 Theme
+
+gulpfile.js
+require dependencies
+tasks for sass, js, img, twig
+gulp to compile, watch & browsersync
